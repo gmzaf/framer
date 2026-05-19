@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Framing Cost Calculator</title>
+    <style>
+	body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    margin: 0;
+}
+
+.calculator-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+h2 {
+    color: #555;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+label {
+    flex: 1;
+    font-weight: bold;
+    color: #666;
+}
+
+input, select {
+    flex: 2;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.output-section {
+    margin-top: 2rem;
+}
+
+.cost-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed #ddd;
+}
+
+.cost-item:last-of-type {
+    border-bottom: none;
+}
+
+.total-cost {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+}
+
+hr {
+    border: 0;
+    border-top: 2px solid #ccc;
+    margin: 1rem 0;
+}
+
+	</style
+</head>
+<body>
+    <div class="calculator-container">
+        <h1>Web-based Framing Calculator</h1>
+
+        <div class="input-section">
+            <h2>Customer Inputs</h2>
+            <form id="framing-form">
+                <div class="form-group">
+                    <label for="units">Measurement units:</label>
+                    <select id="units">
+                        <option value="inches">Inches</option>
+                        <option value="cm">Centimetres</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="width">Frame Width:</label>
+                    <input type="number" id="width" min="1" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="height">Frame Height:</label>
+                    <input type="number" id="height" min="1" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="framingMethod">Framing Method:</label>
+                    <select id="framingMethod">
+                        <option value="Traditional">Traditional</option>
+                        <option value="Box">Box</option>
+                        <option value="Box with mat">Box with mat</option>
+                        <option value="Box for originals">Box for originals</option>
+                        <option value="Float mounting">Float mounting</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="frameMoulding">Frame Moulding:</label>
+                    <select id="frameMoulding">
+					    <option value="Black 750">Black ($7.50/in)</option>
+					    <option value="Black 19">Black 19 ($19/in)</option>
+					    <option value="Black 9">Black 9 ($9/in)</option>
+                        <option value="Black 14x25mm">Black 14x25mm ($6/in)</option>
+                        <option value="Black 20x30mm">Black 20x30mm ($6.50/in)</option>
+                        <option value="White 14x25mm">White 14x25mm ($6/in)</option>
+                        <option value="White 20x30mm">White 20x30mm ($6.50/in)</option>
+                        <option value="Dark Brown 20x35mm">Dark Brown 20x35mm ($7.20/in)</option>
+                        <option value="Walnut 25x50mm">Walnut 25x50mm ($11/in)</option>
+                        <option value="Black 20x20mm (MC2020B)">Black 20x20mm (MC2020B) ($5.50/in)</option>
+                        <option value="Black 20x30mm (107.61.000)">Black 20x30mm (107.61.000)($7/in) </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="glazing">Glazing:</label>
+                    <select id="glazing">
+                        <option value="Regular Acrylic">Regular Acrylic</option>
+                        <option value="Conservation Acrylic">Conservation Acrylic</option>
+                        <option value="Museum Acrylic">Museum Acrylic</option>
+                        <option value="No Glazing">No Glazing</option>
+                    </select>
+                </div>
+                <button type="submit">Calculate</button>
+            </form>
+        </div>
+
+        <div class="output-section">
+            <h2>Cost Breakdown</h2>
+            <div class="cost-item">
+                <span>Perimeter:</span>
+                <span id="perimeterOutput">0.00 in</span>
+            </div>
+            <div class="cost-item">
+                <span>Framing Area:</span>
+                <span id="areaOutput">0.00 sq in</span>
+            </div>
+            <hr>
+            <div class="cost-item">
+                <span>Moulding:</span>
+                <span id="mouldingCost">$0.00</span>
+            </div>
+            <div class="cost-item">
+                <span>Spacer:</span>
+                <span id="spacerCost">$0.00</span>
+            </div>
+            <div class="cost-item">
+                <span>Backing:</span>
+                <span id="backingCost">$0.00</span>
+            </div>
+            <div class="cost-item">
+                <span>Matboard:</span>
+                <span id="matboardCost">$0.00</span>
+            </div>
+            <div class="cost-item">
+                <span>Glazing:</span>
+                <span id="glazingCost">$0.00</span>
+            </div>
+            <div class="cost-item">
+                <span>Wet Mount Labor:</span>
+                <span id="wetMountLaborCost">$0.00</span>
+            </div>
+            <hr>
+            <div class="total-cost">
+                <strong>Total Cost:</strong>
+                <span id="totalCost">$0.00</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+	document.getElementById('framing-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    calculateCost();
+});
+
+function calculateCost() {
+    // 1. Get user inputs
+    const units = document.getElementById('units').value;
+    let width = parseFloat(document.getElementById('width').value);
+    let height = parseFloat(document.getElementById('height').value);
+    const framingMethod = document.getElementById('framingMethod').value;
+    const frameMoulding = document.getElementById('frameMoulding').value;
+    const glazing = document.getElementById('glazing').value;
+
+    // Convert cm to inches for consistent calculations (1 inch = 2.54 cm)
+    if (units === 'cm') {
+        width /= 2.54;
+        height /= 2.54;
+    }
+
+    // 2. Define cost lookup charts
+    const mouldingCosts = {
+		'Black 750': 7.50,
+		'Black 19': 19.00,
+		'Black 9': 9.00,
+        'Black 14x25mm': 6.00,
+        'Black 20x30mm': 6.50,
+        'White 14x25mm': 6.00,
+        'White 20x30mm': 6.50,
+        'Dark Brown 20x35mm': 7.20,
+        'Walnut 25x50mm': 11.00,
+        'Black 20x20mm (MC2020B)': 5.50,
+        'Black 20x30mm (107.61.000)': 7.00
+    };
+
+    const glazingCosts = {
+        'Regular Acrylic': 70,
+		'Conservation Acrylic': 350,
+        'Museum Acrylic': 650,
+        'No Glazing': 0
+    };
+
+    // Component costs.
+    const componentCosts = {
+        spacerCostPerInch: 1.50,
+        backingCostPerSqFt: 50.00,
+        matboardCostPerSqFt: 70.00,
+        wetMountLaborCostPerSqFt: 18.00
+    };
+
+    // 3. Calculate perimeter and area
+    const perimeter = (width + height) * 2;
+    const areaSqIn = width * height;
+    const areaSqFt = areaSqIn / 144; // 1 square foot = 144 square inches
+
+    // 4. Calculate individual component costs
+    const mouldingCost = perimeter * mouldingCosts[frameMoulding];
+    const glazingCost = areaSqFt * glazingCosts[glazing];
+    const spacerCost = perimeter * componentCosts.spacerCostPerInch;
+    const backingCost = areaSqFt * componentCosts.backingCostPerSqFt;
+    const matboardCost = areaSqFt * componentCosts.matboardCostPerSqFt;
+    const wetMountLaborCost = areaSqFt * componentCosts.wetMountLaborCostPerSqFt;
+
+    // 5. Determine total cost and individual component display based on framing method
+    let totalCost = 0;
+    let finalMouldingCost = 0;
+    let finalSpacerCost = 0;
+    let finalBackingCost = 0;
+    let finalMatboardCost = 0;
+    let finalGlazingCost = 0;
+    let finalWetMountLaborCost = 0;
+
+    switch (framingMethod) {
+        case 'Traditional':
+            totalCost = mouldingCost + backingCost + matboardCost + glazingCost;
+            finalMouldingCost = mouldingCost;
+            finalBackingCost = backingCost;
+            finalMatboardCost = matboardCost;
+            finalGlazingCost = glazingCost;
+            break;
+        case 'Box':
+            totalCost = mouldingCost + backingCost + spacerCost + glazingCost;
+            finalMouldingCost = mouldingCost;
+            finalBackingCost = backingCost;
+            finalSpacerCost = spacerCost;
+            finalGlazingCost = glazingCost;
+            break;
+        case 'Box with mat':
+            totalCost = mouldingCost + backingCost + spacerCost + matboardCost + glazingCost;
+            finalMouldingCost = mouldingCost;
+            finalBackingCost = backingCost;
+            finalSpacerCost = spacerCost;
+            finalMatboardCost = matboardCost;
+            finalGlazingCost = glazingCost;
+            break;
+        case 'Float mounting':
+            totalCost = mouldingCost + spacerCost + backingCost + (matboardCost * 2) + glazingCost + wetMountLaborCost;
+            finalMouldingCost = mouldingCost;
+            finalSpacerCost = spacerCost;
+            finalBackingCost = backingCost;
+            finalMatboardCost = matboardCost * 2;
+            finalGlazingCost = glazingCost;
+            finalWetMountLaborCost = wetMountLaborCost;
+            break;
+        case 'Box for originals':
+            totalCost = mouldingCost + spacerCost + backingCost + matboardCost + glazingCost + wetMountLaborCost;
+            finalMouldingCost = mouldingCost;
+            finalSpacerCost = spacerCost;
+            finalBackingCost = backingCost;
+            finalMatboardCost = matboardCost;
+            finalGlazingCost = glazingCost;
+            finalWetMountLaborCost = wetMountLaborCost;
+            break;
+    }
+
+    // 6. Update the HTML with the calculated values
+    document.getElementById('perimeterOutput').textContent = `${perimeter.toFixed(2)} in`;
+    document.getElementById('areaOutput').textContent = `${areaSqIn.toFixed(2)} sq in (${(areaSqIn/144).toFixed(2)} sq ft)`;
+    document.getElementById('mouldingCost').textContent = `$${finalMouldingCost.toFixed(2)}`;
+    document.getElementById('spacerCost').textContent = `$${finalSpacerCost.toFixed(2)}`;
+    document.getElementById('backingCost').textContent = `$${finalBackingCost.toFixed(2)}`;
+    document.getElementById('matboardCost').textContent = `$${finalMatboardCost.toFixed(2)}`;
+    document.getElementById('glazingCost').textContent = `$${finalGlazingCost.toFixed(2)}`;
+    document.getElementById('wetMountLaborCost').textContent = `$${finalWetMountLaborCost.toFixed(2)}`;
+    document.getElementById('totalCost').textContent = `$${totalCost.toFixed(2)}`;
+}
+
+	
+	</script>
+</body>
+</html>
